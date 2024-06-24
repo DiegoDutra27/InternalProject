@@ -8,6 +8,7 @@
 .env
 .env.backup
 .env.production
+.env.example
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -19,3 +20,8 @@ yarn-error.log
 /.vscode
 package-lock.json
 package.json
+composer.json
+composer.lock
+vite.config.js.timestamp*
+.editorconfig
+README.md
