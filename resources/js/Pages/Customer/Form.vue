@@ -20,10 +20,15 @@
                         </template>
 
                         <template #description>
-                            Descreva todas as informações do cliente.
-
-
-                            DATA: {{customer.create}}
+                                <div class="pb-20">
+                                    Descreva todas as informações do cliente.
+                                </div>
+                                <div class="pt-20" v-if="customer.create">
+                                    Criação: {{customer.create}}
+                                </div>
+                                <div v-if="customer.update">
+                                    Última atualização: {{customer.update}}
+                                </div>
                         </template>
 
                         <template #form>
@@ -37,8 +42,9 @@
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="federal_document" value="CNPJ:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="federal_document" class="mt-1 block w-full"
+                                        :mask="['##.###.###/####-##']"
                                         v-model="form.federal_document"/>
                                     <comp-input-error :message="form.errors.federal_document" class="mt-2"/>
                                 </div>
@@ -51,15 +57,17 @@
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="phone" value="Telefone:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="phone" class="mt-1 block w-full"
+                                        :mask="['(##) ####-####', '(##) #####-####']"
                                         v-model="form.phone"/>
                                     <comp-input-error :message="form.errors.phone" class="mt-2"/>
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="zip_code" value="CEP:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="zip_code" class="mt-1 block w-full"
+                                        :mask="['#####-###']"
                                         v-model="form.zip_code"/>
                                     <comp-input-error :message="form.errors.zip_code" class="mt-2"/>
                                 </div>
@@ -109,6 +117,7 @@ import CompInputError from '@/Components/InputError.vue';
 import ProFlash from '@/ArmazemPro/Flash.vue';
 import ProInput from '@/ArmazemPro/Input.vue';
 import ProButtonSend from '@/ArmazemPro/ButtonSend.vue';
+import ProInputMask from '@/ArmazemPro/InputMask.vue';
 
 export default {
 
@@ -154,7 +163,8 @@ export default {
         CompInputError,
         ProFlash,
         ProInput,
-        ProButtonSend
+        ProButtonSend,
+        ProInputMask
     }
 }
 </script>
