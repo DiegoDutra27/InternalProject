@@ -115,6 +115,10 @@ class CustomerController extends Controller
         
         $body = $request->all();
         
+        $body['federal_document'] = preg_replace('/\D/', '', $body['federal_document']);
+        $body['phone'] = preg_replace('/\D/', '', $body['phone']);
+        $body['zip_code'] = preg_replace('/\D/', '', $body['zip_code']);
+
         $body['create'] = isset($body['create']) ? date('Y-m-d H:i:s', strtotime('+3 hours', strtotime($body['create']))) : date('Y-m-d H:i:s');
 
         if ($body['_method'] === 'PUT') {

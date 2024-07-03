@@ -27,7 +27,7 @@
                         @item-selected="show">
 
                         <template #federal_document="row">
-                            {{ row.item.federal_document ? row.item.federal_document : '-------------' }}
+                            {{ row.item.federal_document ? $filters.federalDocument(row.item.federal_document) : '-------------' }}
                         </template>
                         <template #name="row">
                             {{ row.item.name ? row.item.name : '-------------' }}
@@ -36,10 +36,10 @@
                             {{ row.item.email ? row.item.email : '-------------' }}
                         </template>
                         <template #phone="row">
-                            {{ row.item.phone ? row.item.phone : '-------------' }}
+                            {{ row.item.phone ? $filters.phone(row.item.phone) : '-------------' }}
                         </template>
                         <template #create="row">
-                            {{ row.item.create ? dateCreate(row.item.create) : '-------------' }}
+                            {{ row.item.create ? $filters.dateFormat(row.item.create) : '-------------' }}
                         </template>
                     </pro-inertia-table>
                 </div>
@@ -83,12 +83,7 @@ export default {
     methods:{
         show: function (item) {
             this.$inertia.get(this.route('customers.show', item.id));
-        },
-        dateCreate: function(date){
-            date = new Date(date);
-            date = date.setHours(date.getHours() -3);
-            return new Date(date).toLocaleString().replace(',', '');
-        },
+        }
     }
 }
 
