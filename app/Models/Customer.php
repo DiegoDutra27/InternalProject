@@ -20,6 +20,7 @@ class Customer extends Model
         'state',
         'city',
         'address',
+        'is_active',
         'create'
     ];
 }

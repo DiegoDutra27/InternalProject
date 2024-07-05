@@ -4,6 +4,10 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Clientes
             </h2>
+            <pro-button-route type="button" @click.native="redirectToBack()">
+                <font-awesome-icon icon="fas fa-arrow-left mx-1"></font-awesome-icon>
+                Voltar
+            </pro-button-route>
         </template>
 
         <div class="py-12">
@@ -33,6 +37,16 @@
 
                         <template #form>
                             <div class="grid grid-cols-12 gap-4">
+                                <vue-toggle v-if="form.is_active !== null"
+                                :height="30"
+                                :width="75"
+                                checkedBg="#ea580c"
+                                uncheckedBg="red"
+                                :checkedText="'Ativo'"
+                                :uncheckedText="'Inativo'"
+                                v-model="form.is_active"
+                                @click="is_active = !is_active"/>
+
                                 <div class="col-span-12">
                                     <comp-label for="name" value="Razão social:"/>
                                     <pro-input
@@ -118,6 +132,8 @@ import ProFlash from '@/ArmazemPro/Flash.vue';
 import ProInput from '@/ArmazemPro/Input.vue';
 import ProButtonSend from '@/ArmazemPro/ButtonSend.vue';
 import ProInputMask from '@/ArmazemPro/InputMask.vue';
+import ProButtonRoute from '@/ArmazemPro/ButtonRoute.vue';
+import { VueToggles } from 'vue-toggles';
 
 export default {
 
@@ -136,6 +152,9 @@ export default {
                 }
             });
         },
+        redirectToBack() {
+            window.history.back()
+        }
     },
     data() { 
         return {
@@ -150,6 +169,7 @@ export default {
                 state: null,
                 city: null,
                 address: null,
+                is_active: null,
                 ...this.customer
             }, {
                 resetOnSuccess: false,
@@ -164,7 +184,8 @@ export default {
         ProFlash,
         ProInput,
         ProButtonSend,
-        ProInputMask
+        ProInputMask,
+        ProButtonRoute
     }
 }
 </script>

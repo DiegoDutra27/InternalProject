@@ -118,7 +118,7 @@ class CustomerController extends Controller
         $body['federal_document'] = preg_replace('/\D/', '', $body['federal_document']);
         $body['phone'] = preg_replace('/\D/', '', $body['phone']);
         $body['zip_code'] = preg_replace('/\D/', '', $body['zip_code']);
-
+        $body['is_active'] = $body['is_active'] ?? true;
         $body['create'] = isset($body['create']) ? date('Y-m-d H:i:s', strtotime('+3 hours', strtotime($body['create']))) : date('Y-m-d H:i:s');
 
         if ($body['_method'] === 'PUT') {
@@ -126,7 +126,7 @@ class CustomerController extends Controller
         }
 
         unset($body['_method']);
-
+        
         return $body;
     }
 
@@ -134,7 +134,7 @@ class CustomerController extends Controller
     {
         $body['create'] = date('d/m/Y H:i:s', strtotime('-3 hours', strtotime($body['create'])));
         $body['update'] = isset($body['update']) ? date('d/m/Y H:i:s', strtotime('-3 hours', strtotime($body['update']))) : null;
-
+        $body['is_active'] = isset($body['is_active']) && $body['is_active'] === 1 ? true : false;
 
         return $body;
     }
