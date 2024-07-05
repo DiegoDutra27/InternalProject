@@ -16,6 +16,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
+import { VueToggles } from "vue-toggles";
 
 library.add(fas, far, fab)
 
@@ -32,6 +33,7 @@ createInertiaApp({
             .use(ToastPlugin)
             .use(VueTheMask)
             .component('font-awesome-icon', FontAwesomeIcon)
+            .component('vue-toggle', VueToggles)
             .use(VueTippy, {directive: 'tippy', component: 'tippy'})
             app.config.globalProperties.$filters = {
                 federalDocument(value) {

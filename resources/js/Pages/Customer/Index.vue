@@ -41,6 +41,9 @@
                         <template #create="row">
                             {{ row.item.create ? $filters.dateFormat(row.item.create) : '-------------' }}
                         </template>
+                        <template #is_active="row">
+                            <font-awesome-icon class="ml-1 rounded-full fa-2xl" :icon="getActiveData(row.item.is_active).icon" :class="getActiveData(row.item.is_active).bg" v-tippy :content="getActiveData(row.item.is_active).name"></font-awesome-icon>
+                        </template>
                     </pro-inertia-table>
                 </div>
             </div>
@@ -53,6 +56,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ProFlash from '@/ArmazemPro/Flash.vue';
 import ProInertiaTable from '@/ArmazemPro/Table/InertiaTable.vue';
+import { tippy } from 'vue-tippy';
 
 
 export default {
@@ -75,7 +79,8 @@ export default {
                 {key: 'name', text: 'Nome', className: 'text-left', sortable: true},
                 {key: 'email', text: 'E-mail', className: 'text-left', sortable: true},
                 {key: 'phone', text: 'Telefone', className: 'text-left', sortable: true},
-                {key: 'create', text: 'Criado', className: 'text-left', sortable: true}
+                {key: 'create', text: 'Criado', className: 'text-left', sortable: true},
+                {key: 'is_active', text: 'Status', className: 'text-left', sortable: true}
             ],
         }
     },
@@ -83,7 +88,29 @@ export default {
     methods:{
         show: function (item) {
             this.$inertia.get(this.route('customers.show', item.id));
-        }
+        },
+        getActiveData(status) {
+            switch (status) {
+                case 1:
+                    return {
+                        bg: "bg-green-100 text-green-400",
+                        icon: "far fa-check-circle",
+                        name: "Ativo"
+                    };
+                case 0:
+                    return {
+                        bg: "bg-red-100 text-red-400",
+                        icon: "far fa-times-circle",
+                        name: "Inativo"
+                    };
+                default:
+                    return {
+                        bg: "bg-gray-100 text-gray-400",
+                        icon: "fas fa-question-circle",
+                        name: "Não definido"
+                    };
+            }
+        },
     }
 }
 
