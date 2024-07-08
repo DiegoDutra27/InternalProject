@@ -4,6 +4,10 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Clientes
             </h2>
+            <pro-button-route type="button" @click.native="redirectToBack()">
+                <font-awesome-icon icon="fas fa-arrow-left mx-1"></font-awesome-icon>
+                Voltar
+            </pro-button-route>
         </template>
 
         <div class="py-12">
@@ -20,14 +24,29 @@
                         </template>
 
                         <template #description>
-                            Descreva todas as informações do cliente.
-
-                            <p class="pt-12">DATA: {{customer.create}}</p>
-
+                                <div class="pb-20">
+                                    Descreva todas as informações do cliente.
+                                </div>
+                                <div class="pt-20" v-if="customer.create">
+                                    Criação: {{customer.create}}
+                                </div>
+                                <div v-if="customer.update">
+                                    Última atualização: {{customer.update}}
+                                </div>
                         </template>
 
                         <template #form>
                             <div class="grid grid-cols-12 gap-4">
+                                <vue-toggle v-if="form.is_active !== null"
+                                :height="30"
+                                :width="75"
+                                checkedBg="#ea580c"
+                                uncheckedBg="red"
+                                :checkedText="'Ativo'"
+                                :uncheckedText="'Inativo'"
+                                v-model="form.is_active"
+                                @click="is_active = !is_active"/>
+
                                 <div class="col-span-12">
                                     <comp-label for="name" value="Razão social:"/>
                                     <pro-input
@@ -37,8 +56,9 @@
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="federal_document" value="CNPJ:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="federal_document" class="mt-1 block w-full"
+                                        :mask="['##.###.###/####-##']"
                                         v-model="form.federal_document"/>
                                     <comp-input-error :message="form.errors.federal_document" class="mt-2"/>
                                 </div>
@@ -51,15 +71,17 @@
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="phone" value="Telefone:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="phone" class="mt-1 block w-full"
+                                        :mask="['(##) ####-####', '(##) #####-####']"
                                         v-model="form.phone"/>
                                     <comp-input-error :message="form.errors.phone" class="mt-2"/>
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="zip_code" value="CEP:"/>
-                                    <pro-input
+                                    <pro-input-mask
                                         id="zip_code" class="mt-1 block w-full"
+                                        :mask="['#####-###']"
                                         v-model="form.zip_code"/>
                                     <comp-input-error :message="form.errors.zip_code" class="mt-2"/>
                                 </div>
@@ -109,6 +131,9 @@ import CompInputError from '@/Components/InputError.vue';
 import ProFlash from '@/ArmazemPro/Flash.vue';
 import ProInput from '@/ArmazemPro/Input.vue';
 import ProButtonSend from '@/ArmazemPro/ButtonSend.vue';
+import ProInputMask from '@/ArmazemPro/InputMask.vue';
+import ProButtonRoute from '@/ArmazemPro/ButtonRoute.vue';
+import { VueToggles } from 'vue-toggles';
 
 export default {
 
@@ -127,6 +152,9 @@ export default {
                 }
             });
         },
+        redirectToBack() {
+            window.history.back()
+        }
     },
     data() { 
         return {
@@ -141,6 +169,7 @@ export default {
                 state: null,
                 city: null,
                 address: null,
+                is_active: null,
                 ...this.customer
             }, {
                 resetOnSuccess: false,
@@ -154,7 +183,9 @@ export default {
         CompInputError,
         ProFlash,
         ProInput,
-        ProButtonSend
+        ProButtonSend,
+        ProInputMask,
+        ProButtonRoute
     }
 }
 </script>

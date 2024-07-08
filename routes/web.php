@@ -13,10 +13,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/test', function () {
-    return Inertia::render('test');
-});
-
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',])
 ->group(function () {
@@ -26,7 +22,3 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::resource('products', ProductsController::class);
     //Route::get('/json/products','App\Http\Controllers\ProductsController@list');
 });
-
-
-//Route::resource('customers', CustomerController::class);
-//Route::get('/json/customers', 'App\Http\Controllers\CustomerController@list');

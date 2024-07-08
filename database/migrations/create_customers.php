@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('city');
             $table->string('address');
+            $table->boolean('is_active');
             $table->dateTime('create');
             $table->dateTime('update')->nullable();
         });

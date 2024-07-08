@@ -27,7 +27,7 @@
                         @item-selected="show">
 
                         <template #federal_document="row">
-                            {{ row.item.federal_document ? row.item.federal_document : '-------------' }}
+                            {{ row.item.federal_document ? $filters.federalDocument(row.item.federal_document) : '-------------' }}
                         </template>
                         <template #name="row">
                             {{ row.item.name ? row.item.name : '-------------' }}
@@ -36,10 +36,13 @@
                             {{ row.item.email ? row.item.email : '-------------' }}
                         </template>
                         <template #phone="row">
-                            {{ row.item.phone ? row.item.phone : '-------------' }}
+                            {{ row.item.phone ? $filters.phone(row.item.phone) : '-------------' }}
                         </template>
                         <template #create="row">
-                            {{ row.item.create ? dateCreate(row.item.create) : '-------------' }}
+                            {{ row.item.create ? $filters.dateFormat(row.item.create) : '-------------' }}
+                        </template>
+                        <template #is_active="row">
+                            <font-awesome-icon class="ml-1 rounded-full fa-2xl" :icon="getActiveData(row.item.is_active).icon" :class="getActiveData(row.item.is_active).bg" v-tippy :content="getActiveData(row.item.is_active).name"></font-awesome-icon>
                         </template>
                     </pro-inertia-table>
                 </div>
@@ -53,6 +56,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import ProFlash from '@/ArmazemPro/Flash.vue';
 import ProInertiaTable from '@/ArmazemPro/Table/InertiaTable.vue';
+import { tippy } from 'vue-tippy';
 
 
 export default {
@@ -75,7 +79,8 @@ export default {
                 {key: 'name', text: 'Nome', className: 'text-left', sortable: true},
                 {key: 'email', text: 'E-mail', className: 'text-left', sortable: true},
                 {key: 'phone', text: 'Telefone', className: 'text-left', sortable: true},
-                {key: 'create', text: 'Criado', className: 'text-left', sortable: true}
+                {key: 'create', text: 'Criado', className: 'text-left', sortable: true},
+                {key: 'is_active', text: 'Status', className: 'text-left', sortable: true}
             ],
         }
     },
@@ -84,10 +89,27 @@ export default {
         show: function (item) {
             this.$inertia.get(this.route('customers.show', item.id));
         },
-        dateCreate: function(date){
-            date = new Date(date);
-            date = date.setHours(date.getHours() -3);
-            return new Date(date).toLocaleString().replace(',', '');
+        getActiveData(status) {
+            switch (status) {
+                case 1:
+                    return {
+                        bg: "bg-green-100 text-green-400",
+                        icon: "far fa-check-circle",
+                        name: "Ativo"
+                    };
+                case 0:
+                    return {
+                        bg: "bg-red-100 text-red-400",
+                        icon: "far fa-times-circle",
+                        name: "Inativo"
+                    };
+                default:
+                    return {
+                        bg: "bg-gray-100 text-gray-400",
+                        icon: "fas fa-question-circle",
+                        name: "Não definido"
+                    };
+            }
         },
     }
 }

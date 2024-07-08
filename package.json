@@ -32,7 +32,9 @@
         "@inertiajs/vue3": "^1.0.16",
         "lodash": "^4.17.21",
         "vue-select": "^4.0.0-beta.6",
+        "vue-the-mask": "^0.11.1",
         "vue-tippy": "^6.4.1",
-        "vue-toast-notification": "^3.1.2"
+        "vue-toast-notification": "^3.1.2",
+        "vue-toggles": "^2.1.0"
     }
 }
