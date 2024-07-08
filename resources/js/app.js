@@ -5,7 +5,9 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-import { plugin as VueTippy } from 'vue-tippy'; 
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+import { plugin as VueTippy } from 'vue-tippy';
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 import ToastPlugin from 'vue-toast-notification';
@@ -29,6 +31,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(ToastPlugin)
             .component('font-awesome-icon', FontAwesomeIcon)
+            .component("v-select", vSelect)
             .use(VueTippy, {directive: 'tippy', component: 'tippy'})
             .mount(el);
     },

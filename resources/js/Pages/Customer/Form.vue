@@ -22,8 +22,8 @@
                         <template #description>
                             Descreva todas as informações do cliente.
 
+                            <p class="pt-12">DATA: {{customer.create}}</p>
 
-                            DATA: {{customer.create}}
                         </template>
 
                         <template #form>

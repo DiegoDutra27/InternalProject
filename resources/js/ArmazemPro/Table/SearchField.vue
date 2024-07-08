@@ -13,7 +13,7 @@
                     <input type='text'
                            class="rounded-md w-full focus:outline-none border-2 border-gray-300 text-sm pb-2 pl-12 pr-2 py-2 "
                            :value="modelValue"
-                           placeholder="Digite algo para começar ..."
+                           placeholder="Digite algo para começar..."
                            style="FontAwesome"
                            @input="$emit('update:modelValue', $event.target.value)"
                            autocomplete="off"
