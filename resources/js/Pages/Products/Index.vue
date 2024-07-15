@@ -45,13 +45,13 @@
                             {{ row.item.weight_unit ? row.item.weight_unit : '-------------' }}
                         </template>
                         <template #price="row">
-                            {{ row.item.price ? row.item.price : '-------------' }}
+                            {{ row.item.price ? $filters.priceFormat(row.item.price) : '-------------' }}
                         </template>
                         <template #description="row">
                             {{ row.item.description ? row.item.description : '-------------' }}
                         </template>
                         <template #create="row">
-                            {{ row.item.create ? dateCreate(row.item.create) : '-------------' }}
+                            {{ row.item.create ? $filters.dateFormat(row.item.create) : '-------------' }}
                         </template>
                     </pro-inertia-table>
                 </div>
@@ -100,11 +100,6 @@ export default {
     methods:{
         show: function (item) {
             this.$inertia.get(this.route('products.show', item.id));
-        },
-        dateCreate: function(date){
-            date = new Date(date);
-            date = date.setHours(date.getHours() -3);
-            return new Date(date).toLocaleString().replace(',', '');
         },
     }
 }

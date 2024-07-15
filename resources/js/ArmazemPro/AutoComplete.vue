@@ -28,9 +28,12 @@
 
 <script>
 import _ from 'lodash';
+import { ref, onMounted } from 'vue';
+
 
 export default {
     props: {
+        method:  { type: Function },
         styleCustom: {
             type: String,
             default: ''
@@ -46,7 +49,7 @@ export default {
         modelValue: [Object, Array, String, Number],
         optionsList: Array,
         endpoint: String,
-        customOption: Function,
+        customOption: {type: Function},
         filters: {
             type: Object,
             default: null
@@ -62,7 +65,6 @@ export default {
     },
     watch: {
         modelValue: function (val) {
-            //console.log(val)
             this.selectedValue = val;
         }
     },
@@ -87,7 +89,6 @@ export default {
             ? `/json/${this.endpoint}?${this.initialFilters}`
             : `/json/${this.endpoint}`
         ).then(res => {
-            //console.log(res.json().then(json => (this.options = json)));
             res.json().then(json => (this.options = json));
         });
     },
@@ -102,12 +103,9 @@ export default {
             this.$refs.input.focus()
         },
         parseData(option) {
-            //console.log(option)
             try {
                 return this.customOption(option);
             } catch (err) {
-                //console.log(this.modelValue)
-                //console.log(this.value)
                 return option.name;
             }
         },
@@ -118,7 +116,6 @@ export default {
             fetch(endpoint).then(res => {
                 res.json().then(json => {
                     const res = json.data || json;
-                    //console.log(res);
                     if (vm.concatValues) {
                         res.forEach((item) => {
                             item.old_name = item.name;
@@ -132,7 +129,6 @@ export default {
             });
         }, 850),
         fetchData(search, loading) {
-            //console.log(search);
             if (this.optionsList) {
                 return;
             }

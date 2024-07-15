@@ -19,6 +19,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { VueToggles } from "vue-toggles";
+import money from 'v-money';
 
 library.add(fas, far, fab)
 
@@ -34,6 +35,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(ToastPlugin)
             .use(VueTheMask)
+            .use(money)
             .component('font-awesome-icon', FontAwesomeIcon)
             .component("v-select", vSelect)
             .component('vue-toggle', VueToggles)
@@ -71,6 +73,12 @@ createInertiaApp({
                     date = new Date(date);
                     date = date.setHours(date.getHours() -3);
                     return new Date(date).toLocaleString().replace(',', '');
+                },
+                priceFormat: function(price){
+                    if (!price) {
+                        return;
+                    }
+                    return price.replace(".", ",");
                 }
             }
             app.mount(el);

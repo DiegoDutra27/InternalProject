@@ -110,9 +110,7 @@
                             </div>
                         </template>
                         <template #actions>
-                            <pro-button-send class="ml-2"
-                                   @click.native="save"
-                                   >
+                            <pro-button-send class="ml-2 float-right" @click.native="save">
                                    Cadastrar
                             </pro-button-send>
                         </template>
