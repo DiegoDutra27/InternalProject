@@ -5,6 +5,8 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 import { plugin as VueTippy } from 'vue-tippy';
 import VueTheMask from 'vue-the-mask';
 import "tippy.js/dist/tippy.css";
@@ -17,6 +19,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { VueToggles } from "vue-toggles";
+import money from 'v-money';
 
 library.add(fas, far, fab)
 
@@ -32,7 +35,9 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(ToastPlugin)
             .use(VueTheMask)
+            .use(money)
             .component('font-awesome-icon', FontAwesomeIcon)
+            .component("v-select", vSelect)
             .component('vue-toggle', VueToggles)
             .use(VueTippy, {directive: 'tippy', component: 'tippy'})
             app.config.globalProperties.$filters = {
@@ -68,6 +73,12 @@ createInertiaApp({
                     date = new Date(date);
                     date = date.setHours(date.getHours() -3);
                     return new Date(date).toLocaleString().replace(',', '');
+                },
+                priceFormat: function(price){
+                    if (!price) {
+                        return;
+                    }
+                    return price.replace(".", ",");
                 }
             }
             app.mount(el);

@@ -23,7 +23,7 @@ class CustomerController extends Controller
         if ($params !== []) {
             $params['q'] = $params['q'] ?? '';
             $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name','asc'];
-            $response = Customer::orderBy($params['sort'][0], $params['sort']['1'])
+            $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
                         ->where('name', 'like', '%' . $params['q'] . '%')
                         ->orWhere('email', 'like', '%' . $params['q'] . '%')
                         ->orWhere('federal_document', 'like', '%' . $params['q'] . '%')

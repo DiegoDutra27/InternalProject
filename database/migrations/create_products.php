@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('brand');
             $table->unsignedInteger('quantity');
             $table->float('weight');
-            $table->enum('weight_unit', ['g', 'kg', 't']);
+            $table->enum('weight_unit', ['mg', 'g', 'kg', 't']);
             $table->decimal('price', total: 8, places: 2);
             $table->text('description')->nullable();
             $table->dateTime('create');
