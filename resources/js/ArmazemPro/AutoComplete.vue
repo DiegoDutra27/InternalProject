@@ -28,8 +28,6 @@
 
 <script>
 import _ from 'lodash';
-import { ref, onMounted } from 'vue';
-
 
 export default {
     props: {
@@ -84,7 +82,6 @@ export default {
         if (!this.endpoint || !this.autoLoad) {
             return;
         }
-
         fetch((this.initialFilters)
             ? `/json/${this.endpoint}?${this.initialFilters}`
             : `/json/${this.endpoint}`

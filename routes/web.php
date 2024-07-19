@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
 ->group(function () {
     Route::get('/dashboard', function () { return Inertia::render('Dashboard'); })->name('dashboard');
     Route::resource('customers', CustomerController::class);
-    Route::get('/json/customers','App\Http\Controllers\CustomerController@list');
+    Route::get('/json/customers','App\Http\Controllers\CustomerController@listCustomers');
     Route::resource('products', ProductsController::class);
     Route::get('/json/products','App\Http\Controllers\ProductsController@list');
 });
