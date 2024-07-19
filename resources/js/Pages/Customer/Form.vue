@@ -111,7 +111,7 @@
                         </template>
                         <template #actions>
                             <pro-button-send class="ml-2 float-right" @click.native="save">
-                                   Cadastrar
+                                {{ customer.create ? "Atualizar" : "Cadastrar" }}
                             </pro-button-send>
                         </template>
                     </comp-form-section>
