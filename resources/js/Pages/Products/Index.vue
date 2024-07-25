@@ -47,9 +47,6 @@
                         <template #price="row">
                             {{ row.item.price ? $filters.priceFormat(row.item.price) : '-------------' }}
                         </template>
-                        <template #description="row">
-                            {{ row.item.description ? row.item.description : '-------------' }}
-                        </template>
                         <template #create="row">
                             {{ row.item.create ? $filters.dateFormat(row.item.create) : '-------------' }}
                         </template>
@@ -91,7 +88,6 @@ export default {
                 {key: 'weight', text: 'Peso', className: 'text-left', sortable: true},
                 {key: 'weight_unit', text: 'Unidade de Peso', className: 'text-left', sortable: false},
                 {key: 'price', text: 'Preço', className: 'text-left', sortable: true},
-                {key: 'description', text: 'Descrição', className: 'text-left', sortable: false},
                 {key: 'create', text: 'Criado', className: 'text-left', sortable: true}
             ],
         }

@@ -25,7 +25,7 @@
 
                         <template #description>
                             <div class="pb-20">
-                                    Descreva todas as informações do cliente.
+                                    Descreva todas as informações do produto.
                                 </div>
                                 <div class="pt-20" v-if="product.create">
                                     Criação: {{product.create}}
@@ -149,9 +149,9 @@ export default {
             this.deleteProduct = true;
         },
         customerView(option) {
-            return `<div class="grid grid-cols-2 ">
+                return `<div class="grid grid-cols-2 ">
                         <div class="col-span-2  pl-0 text-left break-all font-semibold">${this.$filters.federalDocument(option.federal_document) || ''} | ${option.name || ''}</div>
-                    </div>`
+                        </div>`
         },
         save: function () {
             let endpoint = this.product.id ? `/products/${this.product.id}` : '/products';

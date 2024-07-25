@@ -35,6 +35,18 @@ class CustomerController extends Controller
         return $response;
     }
 
+    public function listCustomers(Request $request)
+    {
+        $params = $request->all();
+        
+            $params['q'] = $params['q'] ?? '';
+            $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name','asc'];
+            $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
+                        ->where('is_active', '=', 1)
+                        ->get();
+        return $response;
+    }
+
     public function create(Request $request)
     {
         return Jetstream::inertia()->render($request, 'Customer/Form', [
