@@ -62,7 +62,11 @@ const logout = () => {
                                     Produtos
                                 </NavLink>
                             </div>
-                            
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('movements.index')" :active="route().current('movements.index')">
+                                    Movimentos
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

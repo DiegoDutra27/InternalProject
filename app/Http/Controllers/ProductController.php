@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Jetstream\Jetstream;
 use App\Models\Products;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     public function index(Request $request)
     {
@@ -28,7 +28,7 @@ class ProductsController extends Controller
                         ->orWhere('products.brand', 'like', '%' . $params['q'] . '%')
                         ->orWhere('products.description', 'like', '%' . $params['q'] . '%')
                         ->join('customers','products.customer_id', '=', 'customers.id')
-                        ->select('products.id', 'products.name', 'customers.name as customer_id', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
+                        ->select('products.id', 'products.name', 'customers.name as customer_id', 'customers.federal_document as customer_federal_document', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
                         ->get();
         return $response;
     }
