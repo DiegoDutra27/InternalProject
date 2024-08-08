@@ -2,10 +2,10 @@
     <AppLayout title="Dashboard">
         <template #header>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    Clientes
+                    Movimentos
                 </h2>
                 <PrimaryButton  :type="'button'" @click="this.$inertia.visit(route('movements.create'))" content="Ver mais" v-tippy>
-                    Novo cliente +
+                    Novo movimento +
                 </PrimaryButton>
         </template>
 
@@ -16,7 +16,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg m-6">
                     <pro-inertia-table
-                        :data="{list: movements}"
+                        :data="{list: movements.data, pages: movements}"
                         :params="params"
                         :columns="columns"
                         :filters="true"

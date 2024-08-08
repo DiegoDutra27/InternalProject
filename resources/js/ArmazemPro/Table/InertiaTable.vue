@@ -319,7 +319,7 @@ export default {
             this.form.sort = sort.join(':');
         },
         paginate: function (page) {
-            this.form.page = page;
+            this.form.page = page.target.value;
         },
     },
     mounted: function () {
