@@ -16,7 +16,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg m-6">
                     <pro-inertia-table
-                        :data="{list: products}"
+                        :data="{list: products.data, pages: products}"
                         :params="params"
                         :columns="columns"
                         :filters="true"

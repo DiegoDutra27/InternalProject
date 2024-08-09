@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Jetstream;
 use App\Models\Products;
+use App\Models\Movements;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -19,17 +21,17 @@ class ProductController extends Controller
     public function list(Request $request)
     {
         $params = $request->all();
-
-            $params['q'] = $params['q'] ?? '';
-            $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name','asc'];
-            $response = Products::orderBy('products.'.$params['sort'][0], $params['sort'][1])
-                        ->where('products.name', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('customers.name', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('products.brand', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('products.description', 'like', '%' . $params['q'] . '%')
-                        ->join('customers','products.customer_id', '=', 'customers.id')
-                        ->select('products.id', 'products.name', 'customers.name as customer_id', 'customers.federal_document as customer_federal_document', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
-                        ->get();
+        $params['q'] = $params['q'] ?? '';
+        $params['size'] = $params['size'] ?? 20;
+        $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name', 'asc'];
+        $response = Products::orderBy('products.' . $params['sort'][0], $params['sort'][1])
+            ->where('products.name', 'like', '%' . $params['q'] . '%')
+            ->orWhere('customers.name', 'like', '%' . $params['q'] . '%')
+            ->orWhere('products.brand', 'like', '%' . $params['q'] . '%')
+            ->orWhere('products.description', 'like', '%' . $params['q'] . '%')
+            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->select('products.id', 'products.name', 'customers.name as customer_id', 'customers.federal_document as customer_federal_document', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
+            ->paginate($params['size'])->withQueryString();
         return $response;
     }
 
@@ -50,9 +52,9 @@ class ProductController extends Controller
     public function show(Request $request, $id)
     {
         $product = Products::where('products.id', $id)
-                            ->join('customers','products.customer_id', '=', 'customers.id')
-                            ->select('products.id', 'products.name', 'customers.id as customer_id', 'customers.name as customer_name', 'customers.federal_document as customer_federal_document', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
-                            ->get()[0];
+            ->join('customers', 'products.customer_id', '=', 'customers.id')
+            ->select('products.id', 'products.name', 'customers.id as customer_id', 'customers.name as customer_name', 'customers.federal_document as customer_federal_document', 'products.brand', 'products.quantity', 'products.weight', 'products.weight_unit', 'products.price', 'products.description', 'products.create', 'products.update')
+            ->get()[0];
         $this->rollbackBody($product);
         return Jetstream::inertia()->render($request, 'Products/Form', [
             'product' => $product
@@ -70,15 +72,20 @@ class ProductController extends Controller
         $body = $this->parseBody($request);
 
         try {
-            Products::create($body);
-        return redirect()->route('products.index')
-            ->with('message', 'Produto criado sucesso!|success');
+            $product = Products::create($body);
+            $bodyMovement = $this->parseBodyMovement($product);
+            Movements::create($bodyMovement);
+
+            return redirect()->route('products.index')
+                ->with('message', 'Produto criado sucesso!|success');
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             return redirect()->route('products.create')
-            ->with('message',
-                \sprintf('%s|error', $message ??
-                    'Ocorreu um erro ao criar o Produto. Verifique seus dados e tente novamente!'));
+                ->with(
+                    'message',
+                    \sprintf('%s|error', $message ??
+                        'Ocorreu um erro ao criar o Produto. Verifique seus dados e tente novamente!')
+                );
         }
     }
 
@@ -89,13 +96,15 @@ class ProductController extends Controller
         try {
             Products::where('id', $id)->update($body);
             return redirect()->route('products.index')
-            ->with('message', 'Produto alterado sucesso!|success');
+                ->with('message', 'Produto alterado sucesso!|success');
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             return redirect()->route('products.show', $id)
-            ->with('message',
-                \sprintf('%s|error', $message ??
-                    'Ocorreu um erro ao criar o produto. Verifique seus dados e tente novamente!'));
+                ->with(
+                    'message',
+                    \sprintf('%s|error', $message ??
+                        'Ocorreu um erro ao criar o produto. Verifique seus dados e tente novamente!')
+                );
         }
         return Jetstream::inertia()->render($request, 'Products/Form');
     }
@@ -105,13 +114,15 @@ class ProductController extends Controller
         try {
             Products::where('id', $id)->delete();
             return redirect()->route('products.index')
-            ->with('message', 'Produto deletado sucesso!|success');
+                ->with('message', 'Produto deletado sucesso!|success');
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             return redirect()->route('products.index')
-            ->with('message',
-                \sprintf('%s|error', $message ??
-                    'Ocorreu um erro ao deletar o produto. Verifique com seus superiores e tente novamente!'));
+                ->with(
+                    'message',
+                    \sprintf('%s|error', $message ??
+                        'Ocorreu um erro ao deletar o produto. Verifique com seus superiores e tente novamente!')
+                );
         }
     }
 
@@ -119,23 +130,23 @@ class ProductController extends Controller
     public function parseBody(Request $request)
     {
         $request->validate([
-            'name'              => 'required',
-            'customer_id'       => 'required',
-            'brand'             => 'required',
-            'quantity'          => 'required',
-            'weight'            => 'required',
-            'weight_unit'       => 'required',
-            'price'             => 'required',
-            'description'       => 'required'
+            'name' => 'required',
+            'customer_id' => 'required',
+            'brand' => 'required',
+            'quantity' => 'required',
+            'weight' => 'required',
+            'weight_unit' => 'required',
+            'price' => 'required',
+            'description' => 'required'
         ]);
-        
+
         $body = $request->all();
-        
+
         $body['create'] = isset($body['create']) ? date('Y-m-d H:i:s', strtotime('+3 hours', strtotime($body['create']))) : date('Y-m-d H:i:s');
 
         $body['customer_id'] = isset($body['customer_id']['id']) ? $body['customer_id']['id'] : null;
 
-        $body['price'] = (float)str_replace(',', '.', str_replace('.', '', $body['price']));
+        $body['price'] = (float) str_replace(',', '.', str_replace('.', '', $body['price']));
 
         if ($body['_method'] === 'PUT') {
             $body['update'] = date('Y-m-d H:i:s');
@@ -151,11 +162,24 @@ class ProductController extends Controller
         $body['create'] = date('d/m/Y H:i:s', strtotime('-3 hours', strtotime($body['create'])));
         $body['update'] = isset($body['update']) ? date('d/m/Y H:i:s', strtotime('-3 hours', strtotime($body['update']))) : null;
 
-        $body['customer_id'] = ['id'=>$body['customer_id'],'name'=>$body['customer_name'], 'federal_document'=>$body['customer_federal_document']];
+        $body['customer_id'] = ['id' => $body['customer_id'], 'name' => $body['customer_name'], 'federal_document' => $body['customer_federal_document']];
 
         unset($body['customer_name']);
         unset($body['customer_federal_document']);
 
         return $body;
+    }
+
+    public function parseBodyMovement($body)
+    {
+
+        $movement = [
+            "product_id" => $body['id'],
+            "quantity" => $body['quantity'],
+            "movement" => 'entry',
+            "create" => date('Y-m-d H:i:s')
+        ];
+
+        return $movement;
     }
 }

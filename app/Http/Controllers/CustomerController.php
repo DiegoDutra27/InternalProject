@@ -20,30 +20,27 @@ class CustomerController extends Controller
     {
         $params = $request->all();
 
-        if ($params !== []) {
-            $params['q'] = $params['q'] ?? '';
-            $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name','asc'];
-            $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
-                        ->where('name', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('email', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('federal_document', 'like', '%' . $params['q'] . '%')
-                        ->orWhere('phone', 'like', '%' . $params['q'] . '%')
-                        ->get();
-        }else{
-            $response = Customer::all();
-        }
+        $params['q'] = $params['q'] ?? '';
+        $params['size'] = $params['size'] ?? 20;
+        $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name', 'asc'];
+        $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
+            ->where('name', 'like', '%' . $params['q'] . '%')
+            ->orWhere('email', 'like', '%' . $params['q'] . '%')
+            ->orWhere('federal_document', 'like', '%' . $params['q'] . '%')
+            ->orWhere('phone', 'like', '%' . $params['q'] . '%')
+            ->paginate($params['size'])->withQueryString();
         return $response;
     }
 
     public function listCustomers(Request $request)
     {
         $params = $request->all();
-        
-            $params['q'] = $params['q'] ?? '';
-            $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name','asc'];
-            $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
-                        ->where('is_active', '=', 1)
-                        ->get();
+
+        $params['q'] = $params['q'] ?? '';
+        $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name', 'asc'];
+        $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
+            ->where('is_active', '=', 1)
+            ->get();
         return $response;
     }
 
@@ -82,14 +79,16 @@ class CustomerController extends Controller
 
         try {
             Customer::create($body);
-        return redirect()->route('customers.index')
-            ->with('message', 'Cliente criado sucesso!|success');
+            return redirect()->route('customers.index')
+                ->with('message', 'Cliente criado sucesso!|success');
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             return redirect()->route('customers.create')
-            ->with('message',
-                \sprintf('%s|error', $message ??
-                    'Ocorreu um erro ao criar o cliente. Verifique seus dados e tente novamente!'));
+                ->with(
+                    'message',
+                    \sprintf('%s|error', $message ??
+                        'Ocorreu um erro ao criar o cliente. Verifique seus dados e tente novamente!')
+                );
         }
     }
 
@@ -100,13 +99,15 @@ class CustomerController extends Controller
         try {
             Customer::where('id', $id)->update($body);
             return redirect()->route('customers.index')
-            ->with('message', 'Cliente alterado sucesso!|success');
+                ->with('message', 'Cliente alterado sucesso!|success');
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             return redirect()->route('customers.show', $id)
-            ->with('message',
-                \sprintf('%s|error', $message ??
-                    'Ocorreu um erro ao criar o cliente. Verifique seus dados e tente novamente!'));
+                ->with(
+                    'message',
+                    \sprintf('%s|error', $message ??
+                        'Ocorreu um erro ao criar o cliente. Verifique seus dados e tente novamente!')
+                );
         }
         return Jetstream::inertia()->render($request, 'Customer/Form');
     }
@@ -124,9 +125,9 @@ class CustomerController extends Controller
             'city'              => 'required',
             'address'           => 'required'
         ]);
-        
+
         $body = $request->all();
-        
+
         $body['federal_document'] = preg_replace('/\D/', '', $body['federal_document']);
         $body['phone'] = preg_replace('/\D/', '', $body['phone']);
         $body['zip_code'] = preg_replace('/\D/', '', $body['zip_code']);
@@ -138,7 +139,7 @@ class CustomerController extends Controller
         }
 
         unset($body['_method']);
-        
+
         return $body;
     }
 

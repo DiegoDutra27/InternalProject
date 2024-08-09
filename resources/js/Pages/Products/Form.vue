@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="quantity" value="Quantidade:" />
-                                    <pro-input id="quantity" class="mt-1 block w-full" v-model="form.quantity" />
+                                    <pro-input id="quantity" class="mt-1 block w-full" :disabled="product.create != undefined" v-model="form.quantity" />
                                     <comp-input-error :message="form.errors.quantity" class="mt-2" />
                                 </div>
                                 <div class="col-span-4">
@@ -154,6 +154,16 @@ export default {
                         </div>`
         },
         save: function () {
+            if (this.producQuantity != this.form.quantity && this.product.id != undefined) {
+                this.$toast.open({
+                    message: 'A quantidade não pode ser atualizada na tela de produtos após a sua criação, favor utilizar o sistema de movimentos.',
+                    type: 'warning',
+                    duration: 2500,
+                    position: 'top-right'
+                });
+                this.form.quantity = this.producQuantity;
+                return;
+            }
             let endpoint = this.product.id ? `/products/${this.product.id}` : '/products';
             this.form.post(endpoint, {
                 preserveScroll: true,
@@ -184,6 +194,7 @@ export default {
     },
     data() {
         return {
+            producQuantity: this.product.quantity || null,
             deleteProduct: false,
             form: this.$inertia.form({
                 _method: this.product.id ? 'PUT' : 'POST',
