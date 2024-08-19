@@ -23,4 +23,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified',]
     Route::resource('products', ProductController::class);
     Route::get('/json/products','App\Http\Controllers\ProductController@list');
     Route::resource('movements', MovementController::class);
+    Route::get('/json/zip-code/{id}','App\Http\Controllers\ZipCodeController@getZipCode');
+
 });

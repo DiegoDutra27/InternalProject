@@ -1,3 +1,66 @@
+<template>
+    <ActionSection>
+        <template #title>
+            Excluir conta
+        </template>
+
+        <template #description>
+            Exclua permanentemente sua conta.
+        </template>
+
+        <template #content>
+            <div class="max-w-xl text-sm text-gray-600">
+                Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Antes de excluir sua conta, baixe todos os dados ou informações que deseja reter.
+            </div>
+
+            <div class="mt-5">
+                <DangerButton @click="confirmUserDeletion">
+                    Excluir conta
+                </DangerButton>
+            </div>
+
+            <DialogModal :show="confirmingUserDeletion" @close="closeModal">
+                <template #title>
+                    Excluir conta
+                </template>
+
+                <template #content>
+                    Tem certeza de que deseja excluir sua conta? Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Digite sua senha para confirmar que deseja excluir permanentemente sua conta.
+
+                    <div class="mt-4">
+                        <TextInput
+                            ref="passwordInput"
+                            v-model="form.password"
+                            type="password"
+                            class="mt-1 block w-3/4"
+                            placeholder="Password"
+                            autocomplete="current-password"
+                            @keyup.enter="deleteUser"
+                        />
+
+                        <InputError :message="form.errors.password" class="mt-2" />
+                    </div>
+                </template>
+
+                <template #footer>
+                    <SecondaryButton @click="closeModal">
+                        Cancelar
+                    </SecondaryButton>
+
+                    <DangerButton
+                        class="ms-3"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="deleteUser"
+                    >
+                        Excluir conta
+                    </DangerButton>
+                </template>
+            </DialogModal>
+        </template>
+    </ActionSection>
+</template>
+
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
@@ -36,67 +99,3 @@ const closeModal = () => {
     form.reset();
 };
 </script>
-
-<template>
-    <ActionSection>
-        <template #title>
-            Delete Account
-        </template>
-
-        <template #description>
-            Permanently delete your account.
-        </template>
-
-        <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
-            </div>
-
-            <div class="mt-5">
-                <DangerButton @click="confirmUserDeletion">
-                    Delete Account
-                </DangerButton>
-            </div>
-
-            <!-- Delete Account Confirmation Modal -->
-            <DialogModal :show="confirmingUserDeletion" @close="closeModal">
-                <template #title>
-                    Delete Account
-                </template>
-
-                <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
-
-                    <div class="mt-4">
-                        <TextInput
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-3/4"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                            @keyup.enter="deleteUser"
-                        />
-
-                        <InputError :message="form.errors.password" class="mt-2" />
-                    </div>
-                </template>
-
-                <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
-                    </SecondaryButton>
-
-                    <DangerButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteUser"
-                    >
-                        Delete Account
-                    </DangerButton>
-                </template>
-            </DialogModal>
-        </template>
-    </ActionSection>
-</template>

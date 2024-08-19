@@ -1,6 +1,6 @@
 
 <template>
-    <Head title="Log in" />
+    <Head title="Entrar" />
 
     <AuthenticationCard>
             <template #logo>

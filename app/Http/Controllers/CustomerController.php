@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Jetstream;
-use App\Models\Customer;
+use App\Models\Customers;
 
 class CustomerController extends Controller
 {
@@ -23,7 +23,7 @@ class CustomerController extends Controller
         $params['q'] = $params['q'] ?? '';
         $params['size'] = $params['size'] ?? 20;
         $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name', 'asc'];
-        $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
+        $response = Customers::orderBy($params['sort'][0], $params['sort'][1])
             ->where('name', 'like', '%' . $params['q'] . '%')
             ->orWhere('email', 'like', '%' . $params['q'] . '%')
             ->orWhere('federal_document', 'like', '%' . $params['q'] . '%')
@@ -38,7 +38,7 @@ class CustomerController extends Controller
 
         $params['q'] = $params['q'] ?? '';
         $params['sort'] = isset($params['sort']) ? explode(':', $params['sort']) : ['name', 'asc'];
-        $response = Customer::orderBy($params['sort'][0], $params['sort'][1])
+        $response = Customers::orderBy($params['sort'][0], $params['sort'][1])
             ->where('is_active', '=', 1)
             ->get();
         return $response;
@@ -60,7 +60,7 @@ class CustomerController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $customer = Customer::where('id', $id)->get()[0];
+        $customer = Customers::where('id', $id)->get()[0];
         $this->rollbackBody($customer);
         return Jetstream::inertia()->render($request, 'Customer/Form', [
             'customer'   => $customer
@@ -78,7 +78,7 @@ class CustomerController extends Controller
         $body = $this->parseBody($request);
 
         try {
-            Customer::create($body);
+            Customers::create($body);
             return redirect()->route('customers.index')
                 ->with('message', 'Cliente criado sucesso!|success');
         } catch (\Throwable $e) {
@@ -97,7 +97,7 @@ class CustomerController extends Controller
     {
         $body = $this->parseBody($request);
         try {
-            Customer::where('id', $id)->update($body);
+            Customers::where('id', $id)->update($body);
             return redirect()->route('customers.index')
                 ->with('message', 'Cliente alterado sucesso!|success');
         } catch (\Throwable $e) {
