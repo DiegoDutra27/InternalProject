@@ -77,13 +77,21 @@
                                         v-model="form.phone"/>
                                     <comp-input-error :message="form.errors.phone" class="mt-2"/>
                                 </div>
-                                <div class="col-span-4">
+                                <div class="col-span-3">
                                     <comp-label for="zip_code" value="CEP:"/>
                                     <pro-input-mask
                                         id="zip_code" class="mt-1 block w-full"
                                         :mask="['#####-###']"
                                         v-model="form.zip_code"/>
                                     <comp-input-error :message="form.errors.zip_code" class="mt-2"/>
+                                </div>
+                                <div class="col-span-1">
+                                    <PrimaryButton class="mt-6 py-3.5" :colors="{bg: 'bg-orange-600', hover:'hover:bg-orange-500', focus:'focus:bg-orange-500', active:'active:bg-orange-700'}"
+                                        :type="'button'" 
+                                        @click.native="searchZipCode" 
+                                        content="Pesquisar CEP" v-tippy>
+                                            <font-awesome-icon icon="fas fa-magnifying-glass mx-1"></font-awesome-icon>
+                                    </PrimaryButton>
                                 </div>
                                 <div class="col-span-4">
                                     <comp-label for="state" value="Estado:"/>
@@ -131,6 +139,7 @@ import ProInput from '@/ArmazemPro/Input.vue';
 import ProButtonSend from '@/ArmazemPro/ButtonSend.vue';
 import ProInputMask from '@/ArmazemPro/InputMask.vue';
 import ProButtonRoute from '@/ArmazemPro/ButtonRoute.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { VueToggles } from 'vue-toggles';
 
 export default {
@@ -148,6 +157,25 @@ export default {
                 onError: () => {
                     this.form.processing = false
                 }
+            });
+        },
+        searchZipCode: function () {
+            axios.get('/json/zip-code/' + this.form.zip_code.replace(/[^0-9]/g, ''))
+            .then(response => {
+                if (response.data == [] || response.data === undefined || response.data.erro == "true") {
+                    this.$toast.open({
+                        message: "CEP inválido, verifique as informações e tente novamente.",
+                        type: 'error',
+                        duration: 2500,
+                        position: 'top-right'
+                    });
+                }
+                this.form.state = response.data.uf;
+                this.form.city = response.data.localidade;
+                this.form.address = response.data.logradouro;
+            })
+            .catch(error => {
+                console.error('Erro ao obter dados:', error);
             });
         },
         redirectToBack() {
@@ -183,7 +211,8 @@ export default {
         ProInput,
         ProButtonSend,
         ProInputMask,
-        ProButtonRoute
+        ProButtonRoute,
+        PrimaryButton
     }
 }
 </script>

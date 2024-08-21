@@ -86,7 +86,7 @@ export default {
             ? `/json/${this.endpoint}?${this.initialFilters}`
             : `/json/${this.endpoint}`
         ).then(res => {
-            res.json().then(json => (this.options = json));
+            res.json().then(json => (this.options = json.data || json));
         });
     },
     methods: {
